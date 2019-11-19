@@ -154,8 +154,38 @@ public class Player implements IPlayer {
         public Colors declareOptional (Card card){
             { //If wild, will choose color from first in deck. Change later to be more strategized.
                 Colors color;
-                color = hand.get(0).getColor();
+                Map<Colors, Integer> mapOfColors = new HashMap<>();
 
+
+
+                var red = 0;
+                var blue = 0;
+                var yellow = 0;
+                var green = 0;
+                var wild = 0;
+
+                for (var cardList : hand) {
+                    switch (cardList.getColor()) { //Is getting every color and the amount of times that color is in your hand
+                        case Wild:
+                            mapOfColors.put(cardList.getColor(), wild++);
+                            break;
+                        case Red:
+                            mapOfColors.put(cardList.getColor(), red++);
+                            break;
+                        case Green:
+                            mapOfColors.put(cardList.getColor(), green++);
+                            break;
+                        case Yellow:
+                            mapOfColors.put(cardList.getColor(), yellow++);
+                            break;
+                        case Blue:
+                            mapOfColors.put(cardList.getColor(), blue++);
+                            break;
+                    }
+                }
+                var colorOptional = mapOfColors.entrySet().stream()
+                        .max(Comparator.comparing(Map.Entry::getValue));
+                color = colorOptional.get().getKey();
 
                 System.out.println("Wild Card Chosen Color: " + color);
                 return color;
