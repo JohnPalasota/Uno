@@ -75,6 +75,9 @@ public class Player implements IPlayer {
 
             for (var card : hand) {
                 switch (card.getColor()) { //Is getting every color and the amount of times that color is in your hand
+                    case Wild:
+                        mapOfColors.put(card.getColor(), wild++);
+                        break;
                     case Red:
                         mapOfColors.put(card.getColor(), red++);
                         break;
@@ -163,9 +166,6 @@ public class Player implements IPlayer {
 
                 for (var cardList : hand) {
                     switch (cardList.getColor()) { //Is getting every color and the amount of times that color is in your hand
-                        case Wild:
-                            mapOfColors.put(cardList.getColor(), wild++);
-                            break;
                         case Red:
                             mapOfColors.put(cardList.getColor(), red++);
                             break;
