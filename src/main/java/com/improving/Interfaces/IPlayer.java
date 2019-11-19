@@ -5,8 +5,8 @@ import com.improving.Game;
 
 import java.util.List;
 
-public interface IPlayer {
-    int handSize();
-    Card draw(Game game);
-    void takeTurn(Game game);
+public interface IPlayer extends IPlayerInfo{
+    Card draw(IGame iGame);
+    void takeTurn(IGame iGame);
+
 }

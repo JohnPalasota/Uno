@@ -1,11 +1,13 @@
 package com.improving;
 
 import com.improving.Enums.Colors;
+import com.improving.Enums.Faces;
+import com.improving.Interfaces.IGame;
 import com.improving.Interfaces.IPlayer;
+import com.improving.Interfaces.IPlayerInfo;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Player implements IPlayer {
     private String name;
@@ -17,31 +19,31 @@ public class Player implements IPlayer {
     }
 
 
-    public void takeTurn(Game game) {
-        Card playableCard = findPlayableCard(game, hand); //Will return null if there are no valid cards to play.
+    public void takeTurn(IGame iGame) {
+        Card playableCard = findPlayableCard(iGame, hand); //Will return null if there are no valid cards to play.
         System.out.println("" + getName() + "\'s Current Hand: " + hand);
 
         if (playableCard != null) { //If playableCard has a Card, it will then put that card down :)
             hand.remove(playableCard);
             if (playableCard.getColor() == Colors.Wild) {
-                game.playCard(playableCard, Optional.of(declareOptional(playableCard)));
+                iGame.playCard(playableCard, Optional.of(declareOptional(playableCard)));
             } else {
-                game.playCard(playableCard, null);
+                iGame.playCard(playableCard, null);
             }
 
 
         } else {
             System.out.println("No valid card found. Drawing...");
-            draw(game);
+            draw(iGame);
             System.out.println("Seeing if new card can fit");
-            playableCard = findPlayableCard(game, hand); //Will now draw a card and see if that card is valid. If it is, it will play the card.
+            playableCard = findPlayableCard(iGame, hand); //Will now draw a card and see if that card is valid. If it is, it will play the card.
             if (playableCard != null) {
                 hand.remove(playableCard);
                 if (playableCard.getColor() == Colors.Wild) {
 
-                    game.playCard(playableCard, Optional.of(declareOptional(playableCard)));
+                    iGame.playCard(playableCard, Optional.of(declareOptional(playableCard)));
                 } else {
-                    game.playCard(playableCard, null);
+                    iGame.playCard(playableCard, null);
                 }
             } else {
                 System.out.println("New card can't fit. Turn ended.");
@@ -51,72 +53,114 @@ public class Player implements IPlayer {
     }
 
 
-    private Card findPlayableCard(Game game, List<Card> hand) {
-        for (var card : hand) {
-            if (game.isPlayable(card)) {
+    private Card findPlayableCard(IGame iGame, List<Card> hand) {
+        List<Card> playableCards = new ArrayList<>();
+        Map<Colors, Integer> mapOfColors = new HashMap<>();
+        Map<Faces, Integer> mapOfFaces = new HashMap<>();
+        Map<Colors, Integer> reverseSortedMap= new HashMap<>();
 
-                return card;
+        var red = 0;
+        var blue = 0;
+        var yellow = 0;
+        var green = 0;
+        var wild = 0;
+        for (var card : hand) {
+            if (iGame.isPlayable(card)) {
+
+                playableCards.add(card);
             }
         }
-        return null;
-    }
-
-    public Card draw(Game game) {
-        hand.add(game.draw());
-        System.out.println("Drew Card: " + hand.get(handSize() - 1));
-        return hand.get(handSize() - 1);
-    }
-
-    public void drawFour(Game game) {
-        draw(game);
-        draw(game);
-        draw(game);
-        draw(game);
-    }
-
-    public void drawTwo(Game game) {
-        draw(game);
-        draw(game);
-    }
+        if (playableCards.size() != 0) {
 
 
-    public String getName() {
-        return name;
-    }
+            for (var card : hand) {
+                switch (card.getColor()) { //Is getting every color and the amount of times that color is in your hand
+                    case Wild:
+                        mapOfColors.put(card.getColor(), wild++);
+                        break;
+                    case Red:
+                        mapOfColors.put(card.getColor(), red++);
+                        break;
+                    case Green:
+                        mapOfColors.put(card.getColor(), green++);
+                        break;
+                    case Yellow:
+                        mapOfColors.put(card.getColor(), yellow++);
+                        break;
+                    case Blue:
+                        mapOfColors.put(card.getColor(), blue++);
+                        break;
+                }
+            }
+            mapOfColors.entrySet().stream()
+                    .sorted(Map.Entry.comparingByValue())
+                    .forEachOrdered(x -> reverseSortedMap.put(x.getKey(), x.getValue()));
+
+            Colors[] maxColorSet = reverseSortedMap.keySet().toArray(Colors[]::new); //Is an array given the colors in descending order by amount of colors
+            for (var color : maxColorSet) {
+                for (var card: playableCards) {
+                    if (card.getColor().equals(color)) {
+                        return card;
+                    }
+                }
+            }
 
 
 
-    public int handSize() {
-        return hand.size();
-    }
 
-
-    private List<Card> getHand() {
-        return hand;
-    }
-
-    public void setHand(List<Card> hand) {
-        this.hand = hand;
-    }
-
-    public Boolean hasWon() {
-        return handSize() == 0;
-    }
-
-    public boolean hasUno() {
-        return handSize() == 1;
-    }
-
-    public Colors declareOptional(Card card) {
-        { //If wild, will choose color from first in deck. Change later to be more strategized.
-            Colors color;
-            color = hand.get(0).getColor();
-
-
-            System.out.println("Wild Card Chosen Color: " + color);
-            return color;
         }
+            return null;
+        }
+
+        public Card draw (IGame iGame){
+            hand.add(iGame.draw());
+            System.out.println("Drew Card: " + hand.get(handSize() - 1));
+            return hand.get(handSize() - 1);
+        }
+
+        public void drawFour (IGame iGame){
+            draw(iGame);
+            draw(iGame);
+            draw(iGame);
+            draw(iGame);
+        }
+
+        public void drawTwo (IGame iGame){
+            draw(iGame);
+            draw(iGame);
+        }
+
+
+        public String getName () {
+            return name;
+        }
+
+
+        public int handSize () {
+            return hand.size();
+        }
+
+
+        private List<Card> getHand () {
+            return hand;
+        }
+
+        public void setHand (List < Card > hand) {
+            this.hand = hand;
+        }
+
+
+
+        public Colors declareOptional (Card card){
+            { //If wild, will choose color from first in deck. Change later to be more strategized.
+                Colors color;
+                color = hand.get(0).getColor();
+
+
+                System.out.println("Wild Card Chosen Color: " + color);
+                return color;
+            }
+        }
+
+
     }
-
-
-}

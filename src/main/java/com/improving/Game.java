@@ -3,6 +3,8 @@ package com.improving;
 import com.improving.Enums.Colors;
 import com.improving.Enums.Faces;
 import com.improving.Interfaces.IGame;
+import com.improving.Interfaces.IPlayer;
+import com.improving.Interfaces.IPlayerInfo;
 
 import java.util.*;
 
@@ -10,6 +12,7 @@ public class Game implements IGame {
 
     private Deck deck = new Deck();
     private List<Player> players = new ArrayList<>();
+
     private Card topCard = null;
     boolean turnSkip = false;
     boolean reverseOrder = false;
@@ -18,12 +21,12 @@ public class Game implements IGame {
     private int turn = 0;
     private Optional<Colors> optionalColor = null;
     private Player player = null;
-    Scanner scanner = new Scanner(System.in);
 
     public Game(int playerAmount) {
         for (int i = 0; i < playerAmount; i++) {
             System.out.println("Player " + (i + 1) + " enter your name.");
             System.out.print(">");
+            Scanner scanner = new Scanner(System.in);
             String name = scanner.nextLine();
             players.add(new Player(name, new ArrayList<>()));
         }
@@ -58,10 +61,10 @@ public class Game implements IGame {
             topCard = deck.getTopCard();
             evaluateTopCard(player);
 
-            if (player.hasUno()) {
+            if (player.handSize() == 1) {
                 System.out.println(player.getName() + ": \"Uno!\"");
             }
-            if (player.hasWon()) {
+            if (player.handSize() == 0) {
                 System.out.println(player.getName() + " has won.");
                 gameInProgress = false;
                 break;
@@ -96,7 +99,7 @@ public class Game implements IGame {
     }
 
 
-    public Card getTopCard() {
+    private Card getTopCard() {
         return topCard;
     }
 
@@ -212,7 +215,7 @@ public class Game implements IGame {
         }
     }
 
-    public void reshuffle() {
+    private void reshuffle() {
         Card topCard = getTopCard();
         deck.getDrawPile().addAll(deck.getDiscardPile());
         Collections.shuffle(deck.getDrawPile());
@@ -222,7 +225,9 @@ public class Game implements IGame {
         for (var card : deck.getDrawPile()) {
             card.setAddressed(false);
         }
+    }
 
-
+    public List<IPlayerInfo> getPlayerInfo() {
+        return new ArrayList<>(players);
     }
 }
