@@ -53,6 +53,11 @@ public class Player implements IPlayer {
     }
 
 
+    @Override
+    public void newHand(List<Card> cards) {
+        this.hand.clear();
+        this.hand.addAll(cards);
+    }
     private Card findPlayableCard(IGame iGame, List<Card> hand) {
         List<Card> playableCards = new ArrayList<>();
         Map<Colors, Integer> mapOfColors = new HashMap<>();
@@ -76,19 +81,19 @@ public class Player implements IPlayer {
             for (var card : hand) {
                 switch (card.getColor()) { //Is getting every color and the amount of times that color is in your hand
                     case Wild:
-                        mapOfColors.put(card.getColor(), wild++);
+                        mapOfColors.put(card.getColor(), ++wild);
                         break;
                     case Red:
-                        mapOfColors.put(card.getColor(), red++);
+                        mapOfColors.put(card.getColor(), ++red);
                         break;
                     case Green:
-                        mapOfColors.put(card.getColor(), green++);
+                        mapOfColors.put(card.getColor(), ++green);
                         break;
                     case Yellow:
-                        mapOfColors.put(card.getColor(), yellow++);
+                        mapOfColors.put(card.getColor(), ++yellow);
                         break;
                     case Blue:
-                        mapOfColors.put(card.getColor(), blue++);
+                        mapOfColors.put(card.getColor(), ++blue);
                         break;
                 }
             }

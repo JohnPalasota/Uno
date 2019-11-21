@@ -8,5 +8,5 @@ import java.util.List;
 public interface IPlayer extends IPlayerInfo{
     Card draw(IGame iGame);
     void takeTurn(IGame iGame);
-
+    public void newHand(List<Card> cards);
 }

@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d682838d-f316-42d9-ab6a-299c1036d874" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/improving/Interfaces/IPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/improving/Interfaces/IPlayer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/improving/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/improving/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/improving/Player.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/improving/Player.class" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -161,5 +160,10 @@
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="((HashMap)reverseSortedMap).entrySet().toArray()[2]" custom="java.util.HashMap" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>
